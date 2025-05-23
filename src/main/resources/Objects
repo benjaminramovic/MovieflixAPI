@@ -1,0 +1,11 @@
+{
+"id":1,
+"title":"Title 1",
+"director":"Director D.",
+"studio":"Studio 1",
+"movieCast":["A","B","C"],
+"releaseYear":2010,
+"genre":"Drama",
+"poster":"abc.png",
+"posterUrl":"url"
+}
