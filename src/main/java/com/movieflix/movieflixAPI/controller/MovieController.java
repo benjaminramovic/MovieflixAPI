@@ -3,8 +3,10 @@ package com.movieflix.movieflixAPI.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.movieflix.movieflixAPI.dto.MovieDto;
+import com.movieflix.movieflixAPI.dto.MoviePageResponse;
 import com.movieflix.movieflixAPI.exceptions.EmptyFileException;
 import com.movieflix.movieflixAPI.services.MovieService;
+import com.movieflix.movieflixAPI.utils.AppConstants;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,11 +46,31 @@ public class MovieController {
     public ResponseEntity<MovieDto> getMovie(@PathVariable Integer id){
         return ResponseEntity.ok(movieService.getMovie(id));
     }
+
+    @GetMapping("/pagination")
+    public ResponseEntity<MoviePageResponse> getAllMoviesWithPagination(
+            @RequestParam(defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
+            @RequestParam(defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize
+    ){
+        return ResponseEntity.ok(movieService.getMoviesWithPagination(pageNumber,pageSize));
+    }
+
+    @GetMapping("/sorting")
+    public ResponseEntity<MoviePageResponse> getAllMoviesWithPaginationAndSorting(
+            @RequestParam(defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
+            @RequestParam(defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
+            @RequestParam(defaultValue = AppConstants.SORT_BY,required = false) String sortBy,
+            @RequestParam(defaultValue = AppConstants.DIR, required = false) String dir
+    ){
+        return ResponseEntity.ok(movieService.getMoviesWithPaginationAndSorting(pageNumber,pageSize,sortBy,dir));
+    }
+
     @PutMapping("/update/{id}")
     public ResponseEntity<MovieDto> updateMovie(@PathVariable Integer id, MultipartFile file, String movieDto) throws IOException {
         MovieDto mdto = convertToMovieDto(movieDto);
         return ResponseEntity.ok(movieService.updateMovie(id,mdto,file));
     }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteMovie(@PathVariable Integer id) throws IOException {
         return ResponseEntity.ok(movieService.deleteMovie(id));
